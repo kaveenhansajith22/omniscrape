@@ -1,0 +1,47 @@
+# Example 4: Reusable News & Blog Article Scraper Template
+name: "news_articles_template"
+description: "Universal blueprint for blogs, news publishers, and RSS-like feeds"
+start_urls:
+  - "https://example-news.com/tech"
+
+engine: "static"
+
+# Automatically extract Schema.org JSON-LD microdata if present
+auto_extract_json_ld: true
+
+item:
+  container_selector: "article.post-entry, div.article-card"
+  fields:
+    headline:
+      selector: "h2.entry-title, h1"
+      extract: "text"
+      transforms: ["strip", "html_unescape"]
+      required: true
+    author:
+      selector: "span.author-name, a[rel='author']"
+      extract: "text"
+      transforms: ["strip"]
+      default: "Editorial Staff"
+    published_date:
+      selector: "time, span.post-date"
+      extract: "attr"
+      attribute: "datetime"
+      default: null
+    summary:
+      selector: "div.entry-summary, p.excerpt"
+      extract: "text"
+      transforms: ["strip"]
+    article_url:
+      selector: "a.read-more, h2 a"
+      extract: "attr"
+      attribute: "href"
+      transforms: ["resolve_url"]
+
+pagination:
+  type: "next_button"
+  selector: "a.next, .pagination-next a"
+  max_pages: 5
+
+export:
+  format: "markdown"
+  filepath: "output/articles.md"

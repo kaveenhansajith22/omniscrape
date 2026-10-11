@@ -1,0 +1,50 @@
+# Example 1: Basic Scraper with Pagination
+# Target: Quotes to Scrape (Static HTML)
+name: "quotes_crawler"
+description: "Scrapes inspirational quotes, authors, and tag lists across multiple pages"
+start_urls:
+  - "https://quotes.toscrape.com/"
+
+engine: "static"
+
+# Anti-blocking & rate limiting
+user_agent_mode: "desktop"
+rotate_user_agent: true
+min_delay: 0.3
+max_delay: 1.0
+timeout: 15.0
+max_retries: 3
+
+# Data extraction rules
+item:
+  container_selector: "div.quote"
+  fields:
+    quote:
+      selector: "span.text"
+      extract: "text"
+      transforms: ["strip", "html_unescape"]
+      required: true
+    author:
+      selector: "small.author"
+      extract: "text"
+      transforms: ["strip"]
+    tags:
+      selector: "div.tags a.tag"
+      extract: "text"
+      multiple: true
+      transforms: ["strip"]
+
+# Multi-page pagination (follow next button)
+pagination:
+  type: "next_button"
+  selector: "li.next > a"
+  max_pages: 3
+
+# Deduplicate quotes by quote text
+deduplicate_by:
+  - "quote"
+
+# Export result
+export:
+  format: "json"
+  filepath: "output/quotes.json"

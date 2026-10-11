@@ -1,0 +1,66 @@
+# Example 3: Reusable E-Commerce Product Scraper Template
+name: "ecommerce_template"
+description: "Universal blueprint for online stores, catalogs, and marketplaces"
+start_urls:
+  - "https://example-shop.com/collections/all"
+
+engine: "static" # Switch to 'dynamic' for JS-rendered storefronts (Shopify, React, Vue)
+
+user_agent_mode: "desktop"
+rotate_user_agent: true
+min_delay: 1.0
+max_delay: 2.0
+timeout: 30.0
+
+# Extract items
+item:
+  container_selector: ".product-card"
+  fields:
+    sku:
+      selector: "[data-product-id]"
+      extract: "attr"
+      attribute: "data-product-id"
+      default: null
+    title:
+      selector: ".product-title, h2.title"
+      extract: "text"
+      transforms: ["strip"]
+      required: true
+    price:
+      selector: ".price-current, .regular-price"
+      extract: "text"
+      transforms: ["to_float"] # Automatically cleans "$1,299.99" -> 1299.99
+    original_price:
+      selector: ".price-compare, .old-price"
+      extract: "text"
+      transforms: ["to_float"]
+    image_url:
+      selector: "img.product-image"
+      extract: "attr"
+      attribute: "src"
+      transforms: ["resolve_url"]
+    product_url:
+      selector: "a.product-link"
+      extract: "attr"
+      attribute: "href"
+      transforms: ["resolve_url"]
+    rating:
+      selector: ".star-rating, [data-rating]"
+      extract: "attr"
+      attribute: "data-rating"
+      transforms: ["to_float"]
+
+# URL Pattern Pagination (e.g. ?page=1, ?page=2)
+pagination:
+  type: "url_pattern"
+  url_pattern: "https://example-shop.com/collections/all?page={page}"
+  start_page: 1
+  max_pages: 10
+
+deduplicate_by:
+  - "product_url"
+
+export:
+  format: "sqlite"
+  filepath: "output/products.sqlite"
+  table_name: "products"

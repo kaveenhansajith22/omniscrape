@@ -1,0 +1,87 @@
+name: "books_catalog_crawler"
+description: "Scrapes book listings and detailed product information"
+
+start_urls:
+  - "https://books.toscrape.com/catalogue/page-1.html"
+
+engine: "static"
+min_delay: 0.5
+max_delay: 1.0
+
+item:
+  container_selector: "article.product_pod"
+  fields:
+    title:
+      selector: "h3 > a"
+      extract: "attr"
+      attribute: "title"
+      transforms: ["strip"]
+      required: true
+    price:
+      selector: "p.price_color"
+      extract: "text"
+      transforms: ["to_float"]
+    availability:
+      selector: "p.instock.availability"
+      extract: "text"
+      transforms: ["strip"]
+    rating:
+      selector: "p.star-rating"
+      extract: "attr"
+      attribute: "class"
+      transforms: ["strip"]
+    image_url:
+      selector: "div.image_container img"
+      extract: "attr"
+      attribute: "src"
+      transforms: ["resolve_url"]
+    detail_url:
+      selector: "h3 > a"
+      extract: "attr"
+      attribute: "href"
+      transforms: ["resolve_url"]
+
+detail_crawl:
+  url_field: "detail_url"
+  fields:
+    upc:
+      selector: "table.table-striped tr:nth-of-type(1) td"
+      extract: "text"
+      transforms: ["strip"]
+    product_type:
+      selector: "table.table-striped tr:nth-of-type(2) td"
+      extract: "text"
+      transforms: ["strip"]
+    price_excluding_tax:
+      selector: "table.table-striped tr:nth-of-type(3) td"
+      extract: "text"
+      transforms: ["strip"]
+    price_including_tax:
+      selector: "table.table-striped tr:nth-of-type(4) td"
+      extract: "text"
+      transforms: ["strip"]
+    tax:
+      selector: "table.table-striped tr:nth-of-type(5) td"
+      extract: "text"
+      transforms: ["strip"]
+    stock:
+      selector: "table.table-striped tr:nth-of-type(6) td"
+      extract: "text"
+      transforms: ["strip"]
+    number_of_reviews:
+      selector: "table.table-striped tr:nth-of-type(7) td"
+      extract: "text"
+      transforms: ["to_int"]
+    description:
+      selector: "#product_description + p"
+      extract: "text"
+      transforms: ["strip"]
+
+pagination:
+  type: "next_button"
+  selector: "li.next > a"
+  max_pages: null
+
+export:
+  format: "csv"
+  filepath: "output/books.csv"
