@@ -281,14 +281,14 @@ All 14 unit and integration tests pass out of the box.
 ### FastAPI Backend — API Documentation
 Shows the interactive API documentation used to test OmniScraper endpoints.
 
-![OmniScraper API Documentation](screenshots/api-docs.png)
+![OmniScraper API Documentation](screenshots/Screenshot 2026-10-14 at 20.26.02.png)
 
 ### React Frontend — Main Interface
 Shows the user interface for interacting with OmniScraper.
 
-![OmniScraper Frontend](screenshots/frontend-main.png)
+![OmniScraper Frontend](screenshots/Screenshot 2026-10-14 at 20.27.14.png)
 
 ### React Frontend — Scraping Results
 Shows the frontend displaying the results of a scraping request.
 
-![OmniScraper Results](screenshots/frontend-results.png)
+![OmniScraper Results](screenshots/Screenshot 2026-10-14 at 20.27.29.png)
