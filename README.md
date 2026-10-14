@@ -276,3 +276,19 @@ pytest -v
 ```
 
 All 14 unit and integration tests pass out of the box.
+## Screenshots
+
+### FastAPI Backend — API Documentation
+Shows the interactive API documentation used to test OmniScraper endpoints.
+
+![OmniScraper API Documentation](screenshots/api-docs.png)
+
+### React Frontend — Main Interface
+Shows the user interface for interacting with OmniScraper.
+
+![OmniScraper Frontend](screenshots/frontend-main.png)
+
+### React Frontend — Scraping Results
+Shows the frontend displaying the results of a scraping request.
+
+![OmniScraper Results](screenshots/frontend-results.png)
